@@ -1,0 +1,193 @@
+电子商务系统
+restful API
+问卷调查系统
+考试系统
+文档管理系统
+爬虫系统
+##############################################################
+>cd D:\mysql-5.7.15-win32\bin
+>mysqld -install
+>mysqld --initialize
+
+start mysql service：
+>net start mysql
+>net stop mysql
+
+>mysql -u root -p 123456
+
+#################################################################
+>gem install rails -v=2.3.8
+> gem sources --add http://gems.ruby-china.org/ --remove https://rubygems.org/
+> gem sources -l
+*** CURRENT SOURCES ***
+
+http://gems.ruby-china.org/
+
+> gem install rails -v=3.2.1
+ERROR:  Error installing rails:
+        invalid gem: package is corrupt, exception while verifying: undefined me
+thod `size' for nil:NilClass (NoMethodError) in C:/Ruby22/lib/ruby/gems/2.2.0/cache/thread_safe-0.3.5.gem
+=>delete the directory cache,errors will not appear when reexecute gem install
+
+>rake db:migrate RAILS_ENV=test
+>rake test:units
+>rake test:functionals
+>ruby -Itest test/unit/product_test.rb
+>ruby -Itest test/unit/product_test.rb -n product_attributes_must_not_be_empty
+>ruby -Itest test/unit/product_test.rb -n /attributes/
+
+>rake spec
+>rspec spec/models/product_spec.rb
+
+
+>rails g scaffold Product title:string description:text image_url:string price:decimal
+>rails g controller store index
+>rails g session_migration
+>rake db:migrate
+>rails g scaffold cart
+>rails g scaffold line_item product_id:integer cart_id:integer
+>rails g migration add_quantity_to_line_item quantity:integer
+>rails g migration combine_items_in_cart
+>rails g scaffold order name:string address:text email:string pay_type:string
+>rails g migration add_order_id_to_line_item order_id:integer
+>rails g scaffold user name:string hashed_password:string salt:string
+>rails g controller sessions new create destroy
+>rails g controller admin index
+
+
+>rake db:create RAILS_ENV=production
+>rails s -e production 
+>bundle exec rake assets:precompile RAILS_ENV=production
+##########################################################
+mysql error 1045
+
+
+1.create a txt file,contents as follow:
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('123456');
+the file named C:\mysql-init.txt。
+2.execute=> D:\mysql-5.7.15-win32\bin\mysqld -nt --init-file=C:\mysql-init.txt
+3.mysql -u root -p 123456
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('123456');
+4.restart mysql service
+
+##########################################################
+MySQL修改root密码的多种方法
+方法1： 用SET PASSWORD命令
+　　mysql -u root
+　　mysql> SET PASSWORD FOR 'root'@'localhost' = PASSWORD('newpass');
+
+方法2：用mysqladmin
+　　mysqladmin -u root password "newpass"
+　　如果root已经设置过密码，采用如下方法
+　　mysqladmin -u root password oldpass "newpass"
+
+方法3： 用UPDATE直接编辑user表
+　　mysql -u root
+　　mysql> use mysql;
+　　mysql> UPDATE user SET Password = PASSWORD('newpass') WHERE user = 'root';
+　　mysql> FLUSH PRIVILEGES;
+
+在丢失root密码的时候，可以这样
+　　mysqld_safe --skip-grant-tables&
+　　mysql -u root mysql
+　　mysql> UPDATE user SET password=PASSWORD("new password") WHERE user='root';
+　　mysql> FLUSH PRIVILEGES;
+##########################################################
+gem降级=>gem update --system 1.5.3
+>gem install mysql2 --platform=ruby -- '--with-mysql-dir="D:\mysql-5.7.15-win32"'
+>gem uninstall activerecord-mysql2-adapter
+>gem install mysql2 -v=0.3.19 -- '--with-mysql-dir="D:\mysql-5.7.15-win32"'
+
+	
+gem install rspec-rails -v=2.8.0
+rspec-rails:activesupport requires Ruby version >= 2.2.2
+Successfully installed rspec-core-2.8.0
+Successfully installed diff-lcs-1.1.3
+Successfully installed rspec-expectations-2.8.0
+Successfully installed rspec-mocks-2.8.0
+Successfully installed rspec-2.8.0
+Successfully installed rspec-rails-2.8.0
+gem uninstall rspec-core diff-lcs rspec-expectations rspec-mocks rspec
+
+
+recursively find the specified file in the current dir
+>dir /s find jquery_ujs.js
+C:\Ruby22\lib\ruby\gems\2.2.0\gems\jquery-rails-3.1.4\vendor\assets\javascripts
+
+>findstr /s /i "last_comment" *.rb
+>cd C:\cygwin\home\Administrator\Depot
+strftime('%Y-%m-%d %H:%M:%S')
+<%= post.updated_at.to_s(:db) %> 
+<%= post.updated_at.localtime.to_s(:db) %> 
+$ find  / -name "*.rb" |xargs grep info
+$ find ./ -name "*view*" -type d
+
+ActiveRecord::Base.logger
+StoreController.logger.info "message"
+
+>tasklist | findstr 3060
+>taskkill /pid 3060 /F
+
+/mswin|mingw/ =~ RUBY_PLATFORM
+require 'securerandom'
+SecureRandom.hex(10)
+SecureRandom.base64(10)
+SecureRandom.urlsafe_base64
+SecureRandom.uuid
+
+#########################################################
+Rails 3 is not compatible with Ruby 2.2 
+ruby1.8.7+rails2.3.5
+ruby1.9.3+rails3.0.8
+ruby2.2.2p95+rails3.2.22
+
+
+Ruby 2.2.0 and ActiveRecord 4.1.0 bug
+Update to Rails 4.1.2 
+NoMethodError: undefined method `name' for nil:NilClass
+
+C:/Ruby22/lib/ruby/gems/2.2.0/gems/activerecord3.2.1/lib/
+active_record/associations/has_many_association.rb:79: 
+warning: circular argument reference - reflection
+
+Changing Rails version from 3.2.15 to 3.2.22 fixed this for me.
+
+the circular argument reference warning in activesupport
+here is what i did to resolve that, i had the latest ruby and the gems are not compatible with that, 
+so after having a fight for nearly a day i switched to older ruby version using rvm from ruby-2.2.1 
+to ruby-2.0.0 ,again this is not an issue with ruby version but incompatibility with gems,try and 
+have good luck with that.
+Active Support dependency warning when using Ruby 2.2.0
+As of Rails 4, a Ruby version of at least 1.9.3 will be required
+#########################################################
+<%if true%>
+<div>
+hello
+<%end%>
+</div>
+
+firefox没问题  IE会多个</div>
+#########################################################
+rails runner script/load_orders.rb
+#########################################################
+100m
+500m
+1km
+5km
+10km
+25km
+50km
+
+bing:POI radius search algorithm
+https://zh.scribd.com/presentation/2569355/Geo-Distance-Search-with-MySQL
+Geo Distance Search with MySQL algorithm
+#########################################################
+>documents
+name
+file_type
+file_size
+parent_id
+file_path
+absolute_path
+
+
