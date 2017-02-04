@@ -241,7 +241,8 @@ top:21px;
 }	
 
 .center > table th {
-	background: linear-gradient(#777, #444);
+	/*background: linear-gradient(#777, #444);*/
+  background: #777;
 	border-left: 1px solid #555;
 	border-right: 1px solid #777;
 	border-top: 1px solid #555;
