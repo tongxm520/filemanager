@@ -8,7 +8,7 @@ class Document < ActiveRecord::Base
   def self.get_docs(doc,arr=[],flag=true)
     name=doc.name
     name=doc.name+"."+doc.file_type unless doc.file_type.nil?
-    hash={"id"=>doc.id,"pId"=>doc.parent_id,"name"=>name}
+    hash={"id"=>doc.id,"pId"=>doc.parent_id,"name"=>name,"url"=>"http://localhost:3000/#{doc.name}", "target"=>"_self"}
     hash["open"]=true if doc.file_type.nil?
     if flag
       hash["iconClose"]="/assets/zTreeStyle/img/diy/Close.png" 
@@ -24,6 +24,33 @@ class Document < ActiveRecord::Base
       end
     end
     arr
+  end
+
+  def children_docs
+    children_docs=self.children
+    children_arr=[]
+    children_docs.each do |doc|
+      children_hash=Hash.new
+      children_hash["name"]=doc.name
+      unless doc.file_type.nil?
+        children_hash["name"] += "."
+        children_hash["name"] += doc.file_type
+      end
+      children_hash["date"]=doc.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+      children_hash["type"]=doc.file_type
+      if doc.file_type.nil?
+        children_hash["type"]="文件夹"
+      end
+
+      if doc.file_size.nil?
+        children_hash["size"]=""
+      else
+        children_hash["size"]=doc.file_size.truncate(3).to_s('F')
+      end
+      children_arr << children_hash
+    end
+    children_arr
   end
 end
 
@@ -47,6 +74,20 @@ public ArrayList<String> refreshFileList(String strPath,ArrayList<String> fileli
   }
   return filelist; 
 }
+
+Without rounding, and without converting to a Float, use BigDecimal#truncate:
+
+v = BigDecimal("7.1762")
+v.truncate(2).to_s('F')
+# => "7.17"
+
+If you need to show trailing zeroes, it gets more complicated:
+
+v = BigDecimal("4.1")
+v.truncate.to_s + '.' + sprintf('%02d', (v.frac * 100).truncate)
+# => "4.10"
+
+which uses truncate to convert to an Integer, always exact (and without rounding).
 =end
 
 

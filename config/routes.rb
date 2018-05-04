@@ -48,7 +48,15 @@ Filemanager::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  root :to => 'filemgr#index'
+  root :to => 'filemgr#show'
+
+  match '/:docname' => 'filemgr#show', :as=> :docname
+
+	# resources :questions, :path_prefix => '/:username' do 
+	#	  resources :answers
+	# end
+	# resources :users
+	# match '/:username' => 'users#show', :as=> :user
 
   # See how all your routes lay out with "rake routes"
 

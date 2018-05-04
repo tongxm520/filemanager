@@ -50,62 +50,27 @@
       <th style="width:315px;">Type</th>
       <th style="width:315px;">Size</th>
     </tr>
+    <%@root_arr.each do |doc|%>
     <tr role="row">
       <td>
-      <div class="webix_hcell">Overview Asia.doc</div>
+      <div class="webix_hcell"><%=doc["name"]%></div>
       </td>
       <td>
-      <div class="webix_hcell">03/10/2014 04:10 PM</div>
+      <div class="webix_hcell"><%=doc["date"]%></div>
       </td>
       <td>
-      <div class="webix_hcell">Document</div>
+      <div class="webix_hcell"><%=doc["type"]%></div>
       </td>
       <td>
-      <div class="webix_hcell">14.678KB</div>
+      <%if doc["size"]==""%>
+        <div class="webix_hcell"></div>
+      <%else%>
+        <div class="webix_hcell"><%=doc["size"]%>KB</div>
+      <%end%>
       </td>
     </tr>
-    <tr role="row">
-      <td>
-      <div class="webix_hcell">Overview Asia.doc</div>
-      </td>
-      <td>
-      <div class="webix_hcell">03/10/2014 04:10 PM</div>
-      </td>
-      <td>
-      <div class="webix_hcell">Document</div>
-      </td>
-      <td>
-      <div class="webix_hcell">14.678KB</div>
-      </td>
-    </tr>
-    <tr role="row">
-      <td>
-      <div class="webix_hcell">Overview Asia.doc</div>
-      </td>
-      <td>
-      <div class="webix_hcell">03/10/2014 04:10 PM</div>
-      </td>
-      <td>
-      <div class="webix_hcell">Document</div>
-      </td>
-      <td>
-      <div class="webix_hcell">14.678KB</div>
-      </td>
-    </tr>
-    <tr role="row">
-      <td>
-      <div class="webix_hcell">Overview Asia.doc</div>
-      </td>
-      <td>
-      <div class="webix_hcell">03/10/2014 04:10 PM</div>
-      </td>
-      <td>
-      <div class="webix_hcell">Document</div>
-      </td>
-      <td>
-      <div class="webix_hcell">14.678KB</div>
-      </td>
-    </tr>
+    <%end%>
+    
 		</tbody>
 	</table>
 	</div>
@@ -160,9 +125,11 @@
 
 	$(document).ready(function(){
 		$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+    //$('.curSelectedNode').removeClass("curSelectedNode");
+    var curr_doc=$('a[data-info=<%=@current_id%>]');
+    curr_doc.addClass("curSelectedNode");
 	});
 	
-
 /*
 var txt = '{ "employees" : [' +  
 '{ "firstName":"John" , "lastName":"Doe" },' +  
