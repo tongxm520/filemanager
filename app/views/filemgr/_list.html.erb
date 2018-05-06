@@ -1,0 +1,35 @@
+<div id="list-view" class="fade tab-pane in active">
+<table cellspacing="0" cellpadding="0"  role="presentation">
+	<tbody>
+	<tr>
+    <th style="width:645px;">Name</th>
+    <th style="width:430px;">Date</th>
+    <th style="width:315px;">Type</th>
+    <th style="width:315px;">Size</th>
+  </tr>
+  <%@root_arr.each do |doc|%>
+  <tr role="row">
+    <td>
+    <div class="webix_hcell"><%=doc["name"]%></div>
+    </td>
+    <td>
+    <div class="webix_hcell"><%=doc["date"]%></div>
+    </td>
+    <td>
+    <div class="webix_hcell"><%=doc["type"]%></div>
+    </td>
+    <td>
+    <%if doc["size"]==""%>
+      <div class="webix_hcell"></div>
+    <%else%>
+      <div class="webix_hcell"><%=doc["size"]%>KB</div>
+    <%end%>
+    </td>
+  </tr>
+  <%end%>
+	</tbody>
+</table>
+</div>
+
+
+

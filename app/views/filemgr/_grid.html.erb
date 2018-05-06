@@ -1,0 +1,29 @@
+<div id="grid-view" class="fade tab-pane">
+<ul class="grid">
+<%@root_arr.each do |doc|%>
+<li class="ui-droppable directory">
+	<div class="item-background"></div>
+	<div class="item-content ui-draggable ui-draggable-handle">
+		<div class="clip">
+      <%if doc["file_tag"]=="FOLDER"%>
+			  <img width="64" class="grid-icon ico_folder loading">
+      <%elsif  doc["file_tag"]=="NOT_IMAGE"%>
+        <img width="64" class="grid-icon ico_file loading">
+      <%elsif  doc["file_tag"]=="COMMON_FILE"%>
+        <img width="64" class="grid-icon ico_file ico_ext_<%=doc['type']%> loading">
+      <%elsif  doc["file_tag"]=="IMAGE"%>
+        <img width="64" class="loaded" src="<%=doc['path']%>">
+      <%end%>
+		</div>
+		<p><%=doc["name"]%></p>
+	</div>
+</li>
+<%end%>
+
+</ul>
+</div>
+<style type="text/css">
+
+</style>
+
+

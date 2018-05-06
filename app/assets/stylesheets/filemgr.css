@@ -22,6 +22,8 @@ div.center {
     right:10px;
     top:66px;
     bottom:10px;
+    overflow-y: scroll;
+    overflow-x: scroll;
 }
 div.handler {
     position: absolute;
@@ -231,7 +233,7 @@ position:absolute;
 top:21px;
 }
 
-.center > table {
+.center > #list-view > table {
 	background: #f5f5f5;
 	border-collapse: separate;
 	box-shadow: inset 0 1px 0 #fff;
@@ -240,7 +242,7 @@ top:21px;
 	text-align: left;
 }	
 
-.center > table th {
+.center > #list-view > table th {
 	/*background: linear-gradient(#777, #444);*/
   background: #777;
 	border-left: 1px solid #555;
@@ -255,7 +257,7 @@ top:21px;
 	text-shadow: 0 1px 0 #000;	
 }
 
-.center > table th:after {
+.center > #list-view > table th:after {
 	background: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.08));
 	content: '';
 	display: block;
@@ -267,16 +269,16 @@ top:21px;
 	width: 100%;
 }
 
-.center > table th:first-child {
+.center > #list-view > table th:first-child {
 	border-left: 1px solid #777;	
 	box-shadow: inset 1px 1px 0 #999;
 }
 
-.center > table th:last-child {
+.center > #list-view > table th:last-child {
 	box-shadow: inset -1px 1px 0 #999;
 }
 
-.center > table td {
+.center > #list-view > table td {
 	border-right: 1px solid #fff;
 	border-left: 1px solid #e8e8e8;
 	border-top: 1px solid #fff;
@@ -286,11 +288,11 @@ top:21px;
 	transition: all 300ms;
 }
 
-.center > table td:first-child {
+.center > #list-view > table td:first-child {
 	box-shadow: inset 1px 0 0 #fff;
 }	
 
-.center > table td:last-child {
+.center > #list-view > table td:last-child {
 	border-right: 1px solid #e8e8e8;
 	box-shadow: inset -1px 0 0 #fff;
 }	
@@ -301,4 +303,135 @@ top:21px;
     padding: 0 10px;
     text-align: left;
 }
+
+/*grid css-------------------------------------*/
+.columns .view-items .grid {
+    padding: 15px;
+    text-align: left;
+}
+
+.columns .view-items .grid li {
+    display: inline-block;
+    width: 142px;
+    min-height: 142px;
+    text-align: center;
+    overflow: hidden;
+    margin: 10px;
+    border: 1px solid gray;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+
+.columns .view-items .grid li:hover {
+    border: 1px solid #E5E5E5;
+    background-color: #F7F7F7;
+    cursor: pointer;
+}
+
+.columns .view-items .grid div.clip {
+    width: 64px;
+    height: 64px;
+    margin: 10px auto;
+    overflow: hidden;
+}
+
+.columns .view-items .grid li.drop-hover{
+    background-color: #e0e0e0;
+}
+
+.columns .view-items .grid p {
+    display: block;
+    text-align: center;
+    margin-bottom: 10px;
+    white-space: nowrap;
+}
+
+ul.grid {
+    list-style: outside none none;
+}
+
+.columns .view-items .grid .grid-icon.ico_folder {
+    background-image: url(fileicons/icon_folder.png);
+}
+
+.columns .view-items .grid .grid-icon.ico_folder_lock {
+    background-image: url(fileicons/icon_folder_lock.png);
+}
+
+.columns .view-items .grid .grid-icon.ico_folder_parent {
+    background-image: url(fileicons/icon_folder_parent.png);
+}
+
+.columns .view-items .grid-icon {
+    height: 64px;
+    width: 64px;
+}
+
+.columns .grid-icon {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: block;
+    margin: 0 auto;
+    overflow: hidden;
+    text-indent: -200%;
+}
+/*grid css-------------------------------------*/
+
+/*switch between grid and list-------------*/
+.center > .tab-pane {
+    display: none;
+}
+
+.center > .active {
+    display: block;
+}
+
+.fade.in {
+    opacity: 1;
+}
+.fade {
+    opacity: 0;
+    transition: opacity 0.15s linear 0s;
+}
+/*switch between grid and list-------------*/
+
+/*icon file---------------------------*/
+.columns .view-items .grid .grid-icon.ico_file {
+    background-image: url(fileicons/icon_file.png);
+}
+
+.columns .view-items .grid .grid-icon.ico_file_lock {
+    background-image: url(fileicons/icon_file_lock.png);
+}
+
+.columns .view-items .grid .grid-icon.ico_ext_pdf {
+    background-image: url(fileicons/icon_pdf.png);
+}
+
+.columns .view-items .grid .grid-icon.ico_ext_doc, .columns .view-items .grid .grid-icon.ico_ext_docx {
+    background-image: url(fileicons/icon_doc.png);
+}
+
+.columns .view-items .grid .grid-icon.ico_ext_xls {
+    background-image: url(fileicons/icon_xls.png);
+}
+
+.columns .view-items .grid .grid-icon.ico_ext_txt {
+    background-image: url(fileicons/icon_txt.png);
+}
+
+.columns .view-items .grid .grid-icon.ico_ext_ppt {
+    background-image: url(fileicons/icon_ppt.png);
+}
+/*icon file---------------------------*/
+
+
+
+
+
+
+
+
 
