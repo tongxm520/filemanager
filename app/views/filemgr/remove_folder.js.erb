@@ -1,0 +1,15 @@
+var nodes = zTree.getSelectedNodes();
+zTree.removeNode(nodes[0]);
+zTree.selectNode(zTree.getNodeByTId("treeDemo_1"));
+
+$("#list-view").html("<%=escape_javascript(render :partial=>'table', :locals=>{:root_arr=> @doc_arr})%>");
+$("#grid-view").html("<%=escape_javascript(render :partial=>'gridview', :locals=>{:root_arr=> @doc_arr})%>");
+$("#show-list").addClass("view-selected");
+$("#show-grid").removeClass("view-selected");
+$("#list-view").addClass("active").addClass("in");
+$("#grid-view").removeClass("active").removeClass("in");
+
+$("#path-box").html("<%=escape_javascript(render :partial=>'doc_path', :locals=>{:path=> @path})%>");
+history.pushState({}, null, "<%=@new_url%>");
+
+

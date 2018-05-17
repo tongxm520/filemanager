@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require ztree/jquery.ztree.core
-
+//= require jquery-ui-1.12.1-js/jquery-ui
+//= require jquery.toastmessage
 
 

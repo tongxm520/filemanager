@@ -6,12 +6,8 @@
     新建文件夹
   </button>
   <div class="filemgr-img-btn path-width path-margin">
-    <div class="container_18 cf">
-      <ol class="file-path grid_18 cf"> 
-        <%@path.each do |p|%>                 
-        <li><%=p%></li> 
-        <%end%>                          
-      </ol>
+    <div id="path-box" class="container_18 cf">
+      <%=render :partial=>"doc_path", :locals=>{:path=> @path}%>
     </div>
   </div>
 
@@ -41,20 +37,54 @@
 	<div class="handler">
 	</div>
 	<div class="center view-items ui-selectable">
-    <%=render :partial => "list" %>
-    <%=render :partial => "grid" %>
+    <div id="list-view" class="fade tab-pane in active">
+      <%=render :partial=>"table", :locals=>{:root_arr=> @root_arr}%>
+    </div>
+    <div id="grid-view" class="fade tab-pane">
+      <%=render :partial=>"gridview", :locals=>{:root_arr=> @root_arr}%>
+    </div>
 	</div>
 </div>
 
 <div id="rMenu">
 	<ul>
-		<li id="m_add" onclick="addTreeNode();">增加节点</li>
-		<li id="m_del" onclick="removeTreeNode();">删除节点</li>
+    <li id="m_copy">Copy</li>
+    <li id="m_cut">Cut</li>
+    <li id="m_paste">Paste</li>
+		<li id="m_add" onclick="addTreeNode();">Create Folder</li>
+		<li id="m_del" onclick="removeTreeNode();">Delete</li>
+    <li id="m_rename">Rename</li>
+    <li id="m_upload">Upload</li>
 	</ul>
 </div>
 
+<div id="dialog-form" title="Create folder">
+  <p class="validateTips">All form fields are required.</p>
+  <form>
+    <fieldset>
+      <input type="text" name="name" id="name" value="NewFolder" class="text ui-widget-content ui-corner-all">
+      <!-- Allow form submission with keyboard without duplicating the dialog button -->
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </fieldset>
+  </form>
+</div>
+
 <script type="text/javascript">
-	
+  var dialog, form,
+  input_name=$("#name"),
+  tips = $(".validateTips");
+
+  $body = $("body");
+
+  var updateTips=function(t) {
+    tips
+      .text(t)
+      .addClass("ui-state-highlight");
+    setTimeout(function() {
+      tips.removeClass("ui-state-highlight", 1500);
+    }, 500 );
+  }
+
 	var setting = {
     view: {
 		  showLine: false,
@@ -70,26 +100,51 @@
     }
 	};
 
+  var current_doc;
+  var previous_doc;
   function OnRightClick(event, treeId, treeNode) {
+    //alert(treeNode.id);alert(treeNode.tId);alert(treeNode.pId);
+    //$('.curSelectedNode').removeClass("curSelectedNode");
+    
 		if (!treeNode && event.target.tagName.toLowerCase() != "button" && $(event.target).parents("a").length == 0) {
+      current_doc=1;
+      if(current_doc!=previous_doc){
+        show_doc(1);
+      }      
 			zTree.cancelSelectedNode();
+      //$("#treeDemo_1_a").addClass("curSelectedNode");
+      zTree.selectNode(zTree.getNodeByTId("treeDemo_1"));
 			showRMenu("root", event.clientX, event.clientY);
 		} else if (treeNode && !treeNode.noR) {
 			zTree.selectNode(treeNode);
-			showRMenu("node", event.clientX, event.clientY);
-		}
+      if(treeNode.tId=="treeDemo_1"){
+        current_doc=1;
+        if(current_doc!=previous_doc){
+          show_doc(1);
+        }
+        showRMenu("root", event.clientX, event.clientY);
+      }else {
+        current_doc=treeNode.id;
+        if(current_doc!=previous_doc){
+          show_doc(treeNode.id);
+        }
+        showRMenu("node", event.clientX, event.clientY);
+      }
+		} 
 	}
 
 	function showRMenu(type, x, y) {
 		$("#rMenu ul").show();
 		if (type=="root") {
 			$("#m_del").hide();
-			$("#m_check").hide();
-			$("#m_unCheck").hide();
+      $("#m_copy").hide();
+      $("#m_cut").hide();
+      $("#m_rename").hide();
 		} else {
 			$("#m_del").show();
-			$("#m_check").show();
-			$("#m_unCheck").show();
+      $("#m_copy").show();
+      $("#m_cut").show();
+      $("#m_rename").show();
 		}
 		rMenu.css({"top":y+"px", "left":x+"px", "visibility":"visible"});
 
@@ -97,26 +152,19 @@
 	}
 
 	function hideRMenu() {
-		if (rMenu) rMenu.css({"visibility": "hidden"});
+		if(rMenu) rMenu.css({"visibility": "hidden"});
 		$("body").unbind("mousedown", onBodyMouseDown);
 	}
 
 	function onBodyMouseDown(event){
-		if (!(event.target.id == "rMenu" || $(event.target).parents("#rMenu").length>0)) {
+		if(!(event.target.id == "rMenu" || $(event.target).parents("#rMenu").length>0)) {
 			rMenu.css({"visibility" : "hidden"});
 		}
 	}
 
-	var addCount = 1;
-	function addTreeNode() {
+  function addTreeNode() {
 		hideRMenu();
-		var newNode = { name:"增加" + (addCount++)};
-		if (zTree.getSelectedNodes()[0]) {
-			newNode.checked = zTree.getSelectedNodes()[0].checked;
-			zTree.addNodes(zTree.getSelectedNodes()[0], newNode);
-		} else {
-			zTree.addNodes(null, newNode);
-		}
+    dialog.dialog("open");
 	}
 
 	function removeTreeNode() {
@@ -125,14 +173,100 @@
 		if (nodes && nodes.length>0) {
 			if (nodes[0].children && nodes[0].children.length > 0) {
 				var msg = "要删除的节点是父节点，如果删除将连同子节点一起删掉。\n\n请确认！";
-				if (confirm(msg)==true){
-					zTree.removeNode(nodes[0]);
+				if(confirm(msg)==true){
+					removeFolder(nodes[0]);
 				}
 			} else {
-				zTree.removeNode(nodes[0]);
+				removeFolder(nodes[0]);
 			}
 		}
 	}
+  
+  var removeFolder=function(node){
+    var data = {"authenticity_token": "<%=form_authenticity_token%>","id":node.id};
+
+		$.ajax({
+			type: 'post',
+			url: '/remove_folder',
+			data: JSON.stringify(data),
+		  contentType: "application/json;charset=utf-8",
+			dataType: 'script',
+			success: function(result,status){
+		  },
+		  error: function(error) {
+		  },
+		  beforeSend: function() {
+        $body.addClass("loading"); 
+		  }
+		}).complete(function() {
+      $body.removeClass("loading");
+      $().toastmessage('showSuccessToast', 'remove folder successfully'); 
+		});
+  }
+
+  var createNewFolder=function(folder_name,tree_node){
+    var pid,_tree_node;
+    if(tree_node) {
+			pid=tree_node.id;
+		} else {
+      pid=1;
+		}
+
+    var data = {"authenticity_token": "<%=form_authenticity_token%>","folder_name":folder_name,"pid":pid};
+
+		$.ajax({
+			type: 'post',
+			url: '/create_folder',
+			data: JSON.stringify(data),
+		  contentType: "application/json;charset=utf-8",
+			dataType: 'json',
+			success: function(result,status){
+        if(status==="success"){
+          if(result.data==="ok"){
+            if(tree_node) {
+							_tree_node=tree_node;
+						} else {
+						  _tree_node=zTree.getNodeByTId("treeDemo_1");
+						}
+				    var new_node = {id:result.id,name:folder_name,pId: pid,isParent:true,icon: "/assets/zTreeStyle/img/diy/Close.png",iconOpen: "/assets/zTreeStyle/img/diy/Open.png",iconClose: "/assets/zTreeStyle/img/diy/Close.png",url:"http://localhost:3001/"+folder_name,target:"_self"};
+						zTree.addNodes(_tree_node, new_node);
+            dialog.dialog("close");
+          }else if(result.data==="error"){
+            input_name.addClass("ui-state-error");
+            updateTips(result.msg);
+          }
+        }
+		  },
+		  error: function(error) {
+		  },
+		  beforeSend: function() {
+        $body.addClass("loading");
+		  }
+		}).complete(function() {
+      $body.removeClass("loading");
+      $().toastmessage('showSuccessToast', 'create folder successfully'); 
+		});
+  }
+
+  function show_doc(id){
+    var data = {"authenticity_token": "<%=form_authenticity_token%>"};
+
+		$.ajax({
+			type: 'post',
+			url: '/show_doc/'+id,
+			data: JSON.stringify(data),
+		  contentType: "application/json;charset=utf-8",
+			dataType: 'script',
+			success: function(result,status){
+		  },
+		  error: function(error) {
+		  },
+		  beforeSend: function() {
+		  }
+		}).complete(function() {
+		});
+    previous_doc=id;
+  }
   
   var zNodes=JSON.parse('<%=raw @docs.to_json %>');
   //alert(zNodes);
@@ -176,7 +310,8 @@
 
     //$('.curSelectedNode').removeClass("curSelectedNode");
     var curr_doc=$('a[data-info=<%=@current_id%>]');
-    curr_doc.addClass("curSelectedNode");
+    var tId=curr_doc.attr("id").split("_")[1];
+    zTree.selectNode(zTree.getNodeByTId("treeDemo_"+tId));
 
 		$("#show-grid").click(function(event){
 		  event.preventDefault();
@@ -198,6 +333,15 @@
 		  }
 		});
 
+    var lis=$("#rMenu ul li");
+    for(var i=0;i<lis.length;i++){
+      $(lis[i]).mouseover(function(){
+        $(this).addClass("operate-menu-hover");
+      });
+      $(lis[i]).mouseout(function(){
+        $(this).removeClass("operate-menu-hover");
+      });
+    }
 	});
 	
 /*
@@ -234,10 +378,154 @@ jQuery(function($){
 		doc.unbind("mousemove");
 	});
 	doc[0].ondragstart = doc[0].onselectstart = function(){return false;};
+});
+
+/*
+contentType is the type of data you're sending, so "application/json;charset=utf-8" is a common one, as is "application/x-www-form-urlencoded;charset=UTF-8", which is the default.
+
+dataType is what you're expecting back from the server:json,xml,html,text,script(js) etc. jQuery will use this to figure out how to populate the success function's parameter.
+
+var data = {"name":"John Doe"}
+$.ajax({
+    dataType : "json",
+    contentType: "application/json; charset=utf-8",
+    data : JSON.stringify(data),
+    success : function(result) {
+      alert(result.success); // result is an object which is created from the returned JSON
+    },
+});
+*/
+
+
+/*create new folder dialog*/
+$(function() {
+  function addNewFolder() {
+    var valid = true;
+    input_name.removeClass("ui-state-error");
+
+    valid = valid && checkLength(input_name, "username", 3, 16);
+    valid = valid && checkRegexp(input_name, /^[a-z]([0-9a-z_\s])+$/i, "Name may consist of a-z, 0-9, underscores, spaces and must begin with a letter.");
+    if(valid) {
+      var nodes = zTree.getSelectedNodes(),
+		  treeNode = nodes[0];
+      var folder_name=input_name.val();
+      createNewFolder(folder_name,treeNode);
+    }
+    return valid;
+  }
+
+  function checkLength( o, n, min, max ) {
+    if ( o.val().length > max || o.val().length < min ) {
+      o.addClass( "ui-state-error" );
+      updateTips( "Length of " + n + " must be between " +
+        min + " and " + max + "." );
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  function checkRegexp( o, regexp, n ) {
+    if(!(regexp.test( o.val()))) {
+      o.addClass("ui-state-error");
+      updateTips(n);
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+	dialog = $("#dialog-form").dialog({
+		autoOpen: false,
+		height: 270,
+		width: 300,
+		modal: true,
+		buttons: {
+		  "Create": addNewFolder,
+		  Cancel: function() {
+		    dialog.dialog("close");
+		  }
+		},
+		close: function() {
+		  form[0].reset();
+		  input_name.removeClass("ui-state-error");
+		}
 	});
+
+	form = dialog.find("form").on("submit", function(event) {
+		event.preventDefault();
+		addNewFolder();
+	});
+});
+
+/*create new folder dialog*/
 </script>
 
 <style type="text/css">
+div#rMenu:before {
+  background: transparent none repeat scroll 0 0;
+  border-color: #fff #fff transparent transparent;
+  border-style: solid;
+  border-width: 6px;
+  border-shadow: 1px 0 0 0 #c8c8c8,0 -1px 0 0 #c8c8c8;
+  content: "";
+  display: block;
+  height: 0;
+  position: absolute;
+  left: 10px;
+  top: -5px;
+  width: 0;
+  -webkit-transform: rotate(-45deg);/* for Chrome || Safari */
+  -moz-transform: rotate(-45deg);/* for Firefox */
+  -ms-transform: rotate(-45deg);/* for IE */
+  -o-transform: rotate(-45deg);/* for Opera */
+  transform: rotate(-45deg); 
+  /*whether to take effect or not related to the order of placement*/
+}
+
+
+div#rMenu {
+  visibility:hidden; 
+  background: #fff none repeat scroll 0 0;
+  border: 1px solid #c8c8c8;
+  text-align: left;
+  border-radius: 4px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3);
+  margin-top: 0;
+  min-width: 200px;
+  position: absolute;
+  top: -20px;
+  left: 10px;
+  z-index: 3;
+}
+
+div#rMenu ul li{
+  border: 1px solid transparent;
+  border-radius: 3px;
+  box-sizing: border-box;
+  color: #4f7573;
+  cursor: pointer;
+  display: block;
+	margin: 5px 0;
+  overflow: hidden;
+  padding: 3px 5px 4px;
+	list-style: none outside none;
+  text-overflow: ellipsis;
+  transition: padding 0.15s linear 0s;
+  white-space: nowrap;
+  width: 100%;
+}
+
+div#rMenu ul li#m_paste {
+   border-bottom: 1px solid #E1E5E3;
+}
+
+div#rMenu ul li.operate-menu-hover{
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+/*
 div#rMenu {
   position:absolute; 
   visibility:hidden; 
@@ -254,4 +542,16 @@ div#rMenu ul li{
 	list-style: none outside none;
 	background-color: #DFDFDF;
 }
+*/
+
+/*dialog-form*/
+label, input { display:block; }
+input.text { margin-bottom:12px; width:95%; padding: .4em; }
+fieldset { padding:0; border:0; margin-top:25px; }
+h1 { font-size: 1.2em; margin: .6em 0; }
+.ui-dialog .ui-state-error { padding: .3em; }
+.validateTips { border: 1px solid transparent; padding: 0.3em; }
+/*dialog-form*/
 </style>
+
+

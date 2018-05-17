@@ -46,11 +46,17 @@ Filemanager::Application.routes.draw do
   #     resources :products
   #   end
 
+  post "show_doc/:id" => "filemgr#show_doc"
+  post "create_folder" => "filemgr#create_folder"
+  post "remove_folder" => "filemgr#remove_folder"
+
+  match '/:docname' => 'filemgr#show', :as=> :docname
+
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
   root :to => 'filemgr#show'
 
-  match '/:docname' => 'filemgr#show', :as=> :docname
+  
 
 	# resources :questions, :path_prefix => '/:username' do 
 	#	  resources :answers

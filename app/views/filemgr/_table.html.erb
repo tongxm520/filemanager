@@ -1,4 +1,3 @@
-<div id="list-view" class="fade tab-pane in active">
 <table cellspacing="0" cellpadding="0"  role="presentation">
 	<tbody>
 	<tr>
@@ -7,7 +6,7 @@
     <th style="width:315px;">Type</th>
     <th style="width:315px;">Size</th>
   </tr>
-  <%@root_arr.each do |doc|%>
+  <%root_arr.each do |doc|%>
   <tr role="row">
     <td>
     <div class="webix_hcell"><%=doc["name"]%></div>
@@ -29,7 +28,4 @@
   <%end%>
 	</tbody>
 </table>
-</div>
-
-
 

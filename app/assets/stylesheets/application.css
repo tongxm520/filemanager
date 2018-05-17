@@ -14,6 +14,8 @@
 *= require_self
 *= require zTreeStyle/zTreeStyle
 *= require filemgr
+*= require jquery-ui-1.12.1-css/jquery-ui
+*= require jquery-toastmessage-plugin/src/main/resources/css/jquery.toastmessage
 */
 
 

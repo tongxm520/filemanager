@@ -67,6 +67,15 @@ class Document < ActiveRecord::Base
     end
     children_arr
   end
+
+  def self.destroy_doc(doc)
+    if doc.children.count>0
+      doc.children.each do |c|
+        destroy_doc(c)
+      end      
+    end
+    doc.destroy
+  end
 end
 
 =begin
