@@ -1,4 +1,4 @@
-<table cellspacing="0" cellpadding="0"  role="presentation">
+<table id="file-table" cellspacing="0" cellpadding="0"  role="presentation">
 	<tbody>
 	<tr>
     <th style="width:645px;">Name</th>
@@ -18,11 +18,11 @@
     <div class="webix_hcell"><%=doc["type"]%></div>
     </td>
     <td>
-    <%if doc["size"]==""%>
-      <div class="webix_hcell"></div>
-    <%else%>
-      <div class="webix_hcell"><%=doc["size"]%>KB</div>
+    <%size=""%>
+    <%if doc["size"]!=""%>
+      <%size=doc["size"]+"KB"%>
     <%end%>
+    <div class="webix_hcell"><%=size%></div>
     </td>
   </tr>
   <%end%>

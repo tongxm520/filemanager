@@ -98,22 +98,22 @@ var methods = {
     return toastItemInner;
 	},
 
-  showNoticeToast : function (message){
+  showNoticeToast: function (message){
       var options = {text : message, type : 'notice'};
       return $().toastmessage('showToast', options);
   },
 
-  showSuccessToast : function (message){
+  showSuccessToast: function (message){
       var options = {text : message, type : 'success'};
       return $().toastmessage('showToast', options);
   },
 
-  showErrorToast : function (message){
+  showErrorToast: function (message){
       var options = {text : message, type : 'error'};
       return $().toastmessage('showToast', options);
   },
 
-  showWarningToast : function (message){
+  showWarningToast: function (message){
       var options = {text : message, type : 'warning'};
       return $().toastmessage('showToast', options);
   },

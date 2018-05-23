@@ -49,6 +49,7 @@ Filemanager::Application.routes.draw do
   post "show_doc/:id" => "filemgr#show_doc"
   post "create_folder" => "filemgr#create_folder"
   post "remove_folder" => "filemgr#remove_folder"
+  post "rename_folder" => "filemgr#rename_folder"
 
   match '/:docname' => 'filemgr#show', :as=> :docname
 

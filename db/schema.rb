@@ -16,12 +16,11 @@ ActiveRecord::Schema.define(:version => 20161114080539) do
   create_table "documents", :force => true do |t|
     t.string   "name"
     t.string   "file_type"
-    t.decimal  "file_size",     :precision => 10, :scale => 3
+    t.decimal  "file_size",  :precision => 10, :scale => 3
     t.integer  "parent_id"
     t.string   "file_path"
-    t.string   "absolute_path"
-    t.datetime "created_at",                                   :null => false
-    t.datetime "updated_at",                                   :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
   end
 
 end

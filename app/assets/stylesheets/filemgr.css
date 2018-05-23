@@ -80,6 +80,10 @@ body {
   outline: 0 none;
 }
 
+.filemgr-img-btn.path-box {
+  cursor:default;
+}
+
 input,button,a {
   outline: 0 none; 
 } 
@@ -134,14 +138,18 @@ input,button,a {
     float: left;
     margin: 0 6px 0 0;
     line-height:30px;
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    white-space: nowrap;
+    word-break: break-all;
 }
-
 
 .file-path {
     color: #fff;
-    font-size: 18px;
+    font-size: 14px;
     list-style: outside none none;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     padding:0;
 }
 

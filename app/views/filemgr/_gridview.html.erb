@@ -1,15 +1,14 @@
-<ul class="grid">
+<ul id="file-grid" class="grid">
 <%root_arr.each do |doc|%>
-<li class="ui-droppable directory">
-	<div class="item-background"></div>
-	<div class="item-content ui-draggable ui-draggable-handle">
+<li>
+	<div>
 		<div class="clip">
       <%if doc["file_tag"]=="FOLDER"%>
-			  <img width="64" class="grid-icon ico_folder loading">
+			  <img width="64" class="grid-icon ico_folder">
       <%elsif  doc["file_tag"]=="NOT_IMAGE"%>
-        <img width="64" class="grid-icon ico_file loading">
+        <img width="64" class="grid-icon ico_file">
       <%elsif  doc["file_tag"]=="COMMON_FILE"%>
-        <img width="64" class="grid-icon ico_file ico_ext_<%=doc['type']%> loading">
+        <img width="64" class="grid-icon ico_file ico_ext_<%=doc['type']%>">
       <%elsif  doc["file_tag"]=="IMAGE"%>
         <img width="64" class="loaded" src="<%=doc['path']%>">
       <%end%>

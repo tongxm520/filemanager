@@ -6,7 +6,6 @@ class CreateDocuments < ActiveRecord::Migration
       t.decimal :file_size, :precision => 10, :scale => 3
       t.integer :parent_id
       t.string :file_path
-      t.string :absolute_path
 
       t.timestamps
     end
