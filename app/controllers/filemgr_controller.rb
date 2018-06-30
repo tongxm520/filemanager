@@ -83,7 +83,7 @@ class FilemgrController < ApplicationController
 		        end
 		        render :json => { :data => "ok", :newname=>doc.name }.to_json
 		      else
-		        render :json => { :data => "error",:msg=>doc.errors.to_h[:name]}.to_json
+		        render :json => { :data => "error",:msg=>doc.errors[:name]}.to_json
 		      end
 				end
       else
@@ -95,4 +95,7 @@ class FilemgrController < ApplicationController
   end
 end
 #d.errors.to_h[:name]
+#d.errors[:name]
+
+
 
